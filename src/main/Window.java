@@ -17,13 +17,10 @@ public class Window extends JFrame{
 		this.setSize(new Dimension(960, 600));
 		this.setLocationRelativeTo(null);
 		
-		this.setPreferredSize(new Dimension(960, 600));
 		mostrarMenu();
 
 		this.setVisible(true);
 		
-		this.add(new TablePoker(7, this));
-		this.pack();	
 	}
 	
 	public void mostrarMenu() {

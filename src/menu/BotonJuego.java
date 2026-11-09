@@ -8,47 +8,66 @@ import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.SwingConstants;
 
 public class BotonJuego extends JButton{
 
 
-	private static final Color DORADO = new Color(212, 175, 55);
-	private static final Color DORADO_CLARO = new Color(255, 215, 90);
-	private static final Color BORDE = new Color(120, 90, 10);
+	private static final Color COLOR_NORMAL = new Color(170, 30, 45);  // rojo burdeos
+	private static final Color COLOR_HOVER = new Color(100, 10, 25);    //burdeos oscuro
+	private static final Color COLOR_DESACTIVADO = new Color(205, 205, 205);
+	private static final Color TEXTO_DESACTIVADO = new Color(120, 120, 120);
+	private static final int GROSOR_BORDE = 5;
 	
-	private boolean hover = false;
+	private boolean activo;
+			
 	
 	public BotonJuego(String texto) {
 		super(texto);
 		
-		setFont(new Font(Font.SERIF, Font.BOLD, 26));
-		setForeground(Color.BLACK);
-		setPreferredSize(new Dimension(220, 70));
+		setFont(new Font(Font.SERIF, Font.BOLD, 28));
+		setHorizontalAlignment(SwingConstants.CENTER);
+		setVerticalAlignment(SwingConstants.CENTER);
+		setBorder(BorderFactory.createLineBorder(Color.BLACK, GROSOR_BORDE));
 		setFocusPainted(false);
-		setBorderPainted(false);
-		setContentAreaFilled(false);
-		setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		setContentAreaFilled(true);
+		setOpaque(true);
+		
+		setActivo(true);
 		
 		addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				// TODO Auto-generated method stub
-				hover = true;
-				repaint();
+				if (activo) {
+					setBackground(COLOR_HOVER);
+				}
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
 				// TODO Auto-generated method stub
-				hover = false;
-				repaint();
+				if (activo) {
+					setBackground(COLOR_NORMAL);
+				}
 			}
 				
 	});
 	
 	}
 	
+	public void setActivo(boolean activo) {
+		this.activo = activo;
+		setBackground(activo ? COLOR_NORMAL : COLOR_DESACTIVADO);
+		setForeground(activo ? Color.WHITE : TEXTO_DESACTIVADO);
+		setCursor(Cursor.getPredefinedCursor(activo ? Cursor.HAND_CURSOR : Cursor.DEFAULT_CURSOR ));
+	}
 	
+	
+	public boolean isActivo() {
+		return activo;
+	}
 }
