@@ -15,7 +15,7 @@ import javax.swing.SwingConstants;
 public class BotonJuego extends JButton{
 
 
-	private static final Color COLOR_NORMAL = new Color(170, 30, 45);  // rojo burdeos
+	private static final Color COLOR_NORMAL = new Color(0, 100, 0);  // verde oscuro
 	private static final Color COLOR_HOVER = new Color(100, 10, 25);    //burdeos oscuro
 	private static final Color COLOR_DESACTIVADO = new Color(205, 205, 205);
 	private static final Color TEXTO_DESACTIVADO = new Color(120, 120, 120);

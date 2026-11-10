@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.JButton;
 
 import card.Deck;
 
@@ -22,6 +23,9 @@ public class TablePoker extends JPanel{
 	private int playerNum;
 	private JPanel up, down, left, right, mid;
 	private Deck deck;
+	private JButton startButton;
+	
+	
 	
 	public TablePoker(int playerNum, JFrame window) {
 		this.playerNum = playerNum;
