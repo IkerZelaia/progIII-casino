@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,14 +18,18 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 
 import card.Deck;
+import player.Player;
 
 public class TablePoker extends JPanel{
+	
+	private static final int CARDS_PER_PLAYER = 2;
 	
 	private JFrame window;
 	private int playerNum;
 	private JPanel up, down, left, right, mid;
 	private Deck deck;
 	private JButton startButton;
+	private List<Player> players = new ArrayList<Player>();
 	
 	
 	
@@ -33,6 +39,8 @@ public class TablePoker extends JPanel{
 		
 		//VENTANA
 		super(new BorderLayout(10, 10));
+		this.playerNum = playerNum;
+		this.window = window;
 		this.setBackground(new Color(0, 120, 0));
 		this.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 		this.setSize(window.getSize());
@@ -79,11 +87,39 @@ public class TablePoker extends JPanel{
 		this.deck = new Deck();
 		JLabel i = deck.getImage();
 		i.setVerticalAlignment(JLabel.CENTER);
+		
+		// BOTON INICIO
+		
+		Dimension buttonSize = new Dimension(180, 50);
+		startButton = new JButton("Inicio");
+		startButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 18));
+		startButton.setPreferredSize(buttonSize);
+		startButton.setMaximumSize(buttonSize);
+		startButton.setFocusPainted(false);
+		startButton.addActionListener(e -> startGame());
+		
+		//ADD -> MAZO Y BOTON
 		mid.add(i);
-		
-		
-		System.out.println(mid.getComponentCount());
+		mid.add(startButton);
 	}
+	
+	private void startGame() {
+		startButton.setEnabled(false);
+		startButton.setText("Repartiendo...");
+		
+		for(Player player : players) {
+			player.clearHand();
+		}
+		
+		Dealer dealer = new Dealer(deck, players, CARDS_PER_PLAYER, () -> {
+			startButton.setText("Nueva mano");
+			startButton.setEnabled(true);
+		});
+		dealer.start();
+		
+	}
+	
+	
 	
 	public void addPlayers(){
 		for (int i = 0; i < playerNum; i ++) {
@@ -157,4 +193,9 @@ public class TablePoker extends JPanel{
 	public int getPlayerNum() {
 		return this.playerNum;
 	}
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+	
 }

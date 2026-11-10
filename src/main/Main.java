@@ -1,12 +1,9 @@
 package main;
 
-import java.util.LinkedList;
-
-import card.Card;
-import card.Deck;
+import javax.swing.SwingUtilities;
 
 public class Main {
 	public static void main(String[] args) {
-		Window v = new Window();
+		SwingUtilities.invokeLater(() -> new Window());
 	}
 }

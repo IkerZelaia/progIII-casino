@@ -1,6 +1,7 @@
 package player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -23,7 +24,36 @@ public class Player {
 	
 	public void receiveCard(Card card) {
 		hand.add(card);
-		
+		card.setVisible(human);
+		panel.add(card.getImage());
+		panel.revalidate();
+		panel.repaint();
+	}
+	
+	public void clearHand() {
+		for (Card card: hand) {
+			card.setVisible(false);
+		}
+		hand.clear();
+		panel.removeAll();
+		panel.revalidate();
+		panel.repaint();
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public boolean isHuman() {
+		return human;
+	}
+
+	public JPanel getPanel() {
+		return panel;
+	}
+
+	public List<Card> getHand() {
+		return hand;
 	}
 	
 }
