@@ -65,13 +65,15 @@ public class MainMenu extends JPanel{
 	}
 	
 	public void anadirJuego(String nombre, Runnable accion) {
-		if (siguienteLibre >= NUM_CASILLAS) {
-			throw new IllegalStateException("No quedan casillas libres en el menu");
-		}
-		BotonJuego casilla = casillas[siguienteLibre];
-		casilla.setText(nombre);
-		casilla.setEnabled(true);
-		casilla.addActionListener(e -> accion.run());
+	    if (siguienteLibre >= NUM_CASILLAS) {
+	        throw new IllegalStateException("No quedan casillas libres en el menu");
+	    }
+	    BotonJuego casilla = casillas[siguienteLibre];
+	    casilla.setText(nombre);
+	    casilla.setEnabled(true);
+	    casilla.addActionListener(e -> accion.run());
+	    
+	    siguienteLibre++; //Faltaba esta línea
 	}
 	
 	
