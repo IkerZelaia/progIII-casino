@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import menu.MainMenu;
+import table.SlotMachine;
 import table.TablePoker;
 
 public class Window extends JFrame{
@@ -26,11 +27,16 @@ public class Window extends JFrame{
 	public void mostrarMenu() {
 		MainMenu menu = new MainMenu();
 		menu.anadirJuego("Poker", this::mostrarPoker);
-		cambiarPanel(menu);
+        menu.anadirJuego("Slots", this::mostrarSlots); 
+        cambiarPanel(new DownloadScreen(this, menu));
 	}
 	
 	public void mostrarPoker() {
 		cambiarPanel(new TablePoker(7, this));
+	}
+	
+	public void mostrarSlots() {
+		cambiarPanel(new SlotMachine());
 	}
 
 	public void cambiarPanel(JPanel panel) {

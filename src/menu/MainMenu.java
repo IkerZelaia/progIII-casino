@@ -73,9 +73,8 @@ public class MainMenu extends JPanel{
 	    casilla.setEnabled(true);
 	    casilla.addActionListener(e -> accion.run());
 	    
-	    siguienteLibre++; //Faltaba esta línea
+	    siguienteLibre++;
 	}
-	
 	
 	
 	
