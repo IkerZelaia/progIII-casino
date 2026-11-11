@@ -27,7 +27,7 @@ public class DownloadScreen extends JFrame {
 
         Color verdeCasino = new Color(0, 150, 0);
 
-        statusLabel = new JLabel("Downloading :", SwingConstants.LEFT);
+        statusLabel = new JLabel("Downloading:", SwingConstants.LEFT);
         statusLabel.setForeground(verdeCasino); 
         statusLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
 

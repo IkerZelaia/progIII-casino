@@ -49,11 +49,14 @@ public class MainMenu extends JPanel{
 		panelBotones.setOpaque(false);
 		panelBotones.setPreferredSize(new Dimension(880, 110));	
 		
+		
 		for (int i = 0; i < NUM_CASILLAS; i++) {
 			casillas[i] = new BotonJuego("Pr\u00f3ximamente");
 			casillas[i].setEnabled(false);
 			panelBotones.add(casillas[i]);
+			
 		}
+		
 		
 		JPanel centro = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 50));
 		centro.setOpaque(false);
@@ -68,6 +71,7 @@ public class MainMenu extends JPanel{
 	    if (siguienteLibre >= NUM_CASILLAS) {
 	        throw new IllegalStateException("No quedan casillas libres en el menu");
 	    }
+	    
 	    BotonJuego casilla = casillas[siguienteLibre];
 	    casilla.setText(nombre);
 	    casilla.setEnabled(true);
