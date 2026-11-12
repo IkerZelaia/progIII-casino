@@ -24,7 +24,7 @@ public class Player {
 	
 	public void receiveCard(Card card) {
 		hand.add(card);
-		card.setVisible(human);
+		card.setShown(human);
 		panel.add(card.getImage());
 		panel.revalidate();
 		panel.repaint();
@@ -32,7 +32,7 @@ public class Player {
 	
 	public void clearHand() {
 		for (Card card: hand) {
-			card.setVisible(false);
+			card.setShown(false);
 		}
 		hand.clear();
 		panel.removeAll();

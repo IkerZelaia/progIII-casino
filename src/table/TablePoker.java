@@ -17,7 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 
+import card.Card;
 import card.Deck;
+import main.Main;
 import player.Player;
 
 public class TablePoker extends JPanel{
@@ -26,7 +28,7 @@ public class TablePoker extends JPanel{
 	
 	private JFrame window;
 	private int playerNum;
-	private JPanel up, down, left, right, mid;
+	private JPanel up, left, right, mid, playerPanel, pHandPanel, gamePanel, betPanel;
 	private Deck deck;
 	private JButton startButton;
 	private List<Player> players = new ArrayList<Player>();
@@ -49,11 +51,17 @@ public class TablePoker extends JPanel{
 		// PANELES
 		JPanel midPanel = new JPanel();
 		
+		int numJugadorLado = Math.ceilDiv(playerNum, 4);
+		int numJugadorTop = playerNum / 2;
+		
 		PanelSide
-		downPanel = new PanelSide(0, 1,  window.getHeight()/5),
-		upPanel = new PanelSide(2, 1,  window.getHeight()/5),
-		leftPanel = new PanelSide(1, 1,  window.getHeight()/5),
-		rightPanel = new PanelSide(3, 1,  window.getHeight()/5);
+		upPanel = new PanelSide(2, numJugadorTop,  window.getHeight()/5),
+		leftPanel = new PanelSide(1, numJugadorLado,  window.getHeight()/5),
+		rightPanel = new PanelSide(3, numJugadorLado,  window.getHeight()/5);
+		
+		PanelSide downPanel = new PanelSide(4, 3, window.getHeight()/5);
+		
+		
 		
 		downPanel.setBackground(this.getBackground().brighter());
 		upPanel.setBackground(this.getBackground().brighter());
@@ -74,11 +82,10 @@ public class TablePoker extends JPanel{
 		midPanel.setLayout(f);
 		
 		this.up = upPanel;
-		this.down = downPanel;
+		this.playerPanel = downPanel;
 		this.left = leftPanel;
 		this.right = rightPanel;
 		this.mid = midPanel;
-		
 		
 		addPlayers();
 		
@@ -87,6 +94,16 @@ public class TablePoker extends JPanel{
 		this.deck = new Deck();
 		JLabel i = deck.getImage();
 		i.setVerticalAlignment(JLabel.CENTER);
+		
+		Card c1, c2;
+		c1 = deck.draw();
+		c2 = deck.draw();
+		System.out.println(c1 + " " + c2);
+		c1.setShown(true);
+		c2.setShown(true);
+		pHandPanel.add(c1.getImage());
+		
+		pHandPanel.add(c2.getImage());
 		
 		// BOTON INICIO
 		
@@ -99,24 +116,17 @@ public class TablePoker extends JPanel{
 		startButton.addActionListener(e -> startGame());
 		
 		//ADD -> MAZO Y BOTON
-		mid.add(i);
-		mid.add(startButton);
+		//mid.add(i);
+		gamePanel.add(startButton);
+		
 	}
+	
 	
 	private void startGame() {
 		startButton.setEnabled(false);
-		startButton.setText("Repartiendo...");
+		deck.shuffle();
 		
-		for(Player player : players) {
-			player.clearHand();
-		}
-		
-		Dealer dealer = new Dealer(deck, players, CARDS_PER_PLAYER, () -> {
-			startButton.setText("Nueva mano");
-			startButton.setEnabled(true);
-		});
-		dealer.start();
-		
+	
 	}
 	
 	
@@ -127,64 +137,39 @@ public class TablePoker extends JPanel{
 			JPanel temp = new JPanel();
 			temp.setOpaque(false);
 			
-			if (i == 0 ) { 
+			if (i == 0 ) {
+				betPanel = new JPanel();
+				gamePanel = new JPanel();
+				
+				betPanel.setOpaque(false);
+				gamePanel.setOpaque(false);
 				temp.setBorder(BorderFactory.createTitledBorder( BorderFactory.createLineBorder(this.getBackground().darker(), 7), "You", 0, 0, new Font(null, Font.BOLD, 20))); 
+				pHandPanel = temp;
+				
+				playerPanel.add(betPanel);
+				playerPanel.add(pHandPanel);
+				playerPanel.add(gamePanel);
 			}
 			else{
 				temp.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(this.getBackground(), 3),"Player" + i)) ;
-			}
-			
-			if ( Math.floorDiv(i, 4) % 2 == 0) {
-				switch (i % 4) {
-				case 0: {
-					down.add(temp);
-					break;
-				}
-				case 1: {
-					up.add(temp);	
-					break;
-				}
-				case 2: {
-					left.add(temp);
-					break;
-				}
-				case 3: {
-					right.add(temp);
-					break;
-				}
-				default:{
-					throw new IllegalArgumentException("Unexpected value: " + i % 4);
-				}
-				}
-			}
-			else {
-				switch (i % 4) {
-				case 0: {
+				
+				if (i % 2 == 0) {
 					up.add(temp);
-					break;
 				}
-				case 1: {
-					down.add(temp);	
-					break;
+				else {
+					 if (i % 4 == 1) {
+						 left.add(temp); 
+					 }
+					 else {
+						 right.add(temp);
+					 }
 				}
-				case 2: {
-					up.add(temp);
-					break;
-				}
-				case 3: {
-					down.add(temp);
-					break;
-				}
-				default:{
-					throw new IllegalArgumentException("Unexpected value: " + i % 4);
-				}
-				}
-			}
-			
-			
+			}	
 			
 		}
 	}
+	
+	
 	
 	public JFrame getWindow() {
 		return this.window;

@@ -27,19 +27,22 @@ public class Window extends JFrame{
 	
 	public void mostrarMenu() {
 		MainMenu menu = new MainMenu();
+		
+		mostrarPantallaDeCarga(menu);
+		
 		menu.anadirJuego("Poker", this::mostrarPoker);
 
         menu.anadirJuego("Slots", this::mostrarSlots); 
-        cambiarPanel(new DownloadScreen(this, menu));
+        
 		menu.anadirJuego("Blackjack", this::mostrarBlackjack);
-		cambiarPanel(menu);
+		//cambiarPanel(menu);
 
 	}
 	
 	
 	
 	public void mostrarPoker() {
-		cambiarPanel(new TablePoker(7, this));
+		cambiarPanel(new TablePoker(8, this));
 	}
 	
 
@@ -48,6 +51,10 @@ public class Window extends JFrame{
 	}
 	public void mostrarBlackjack() {
 		cambiarPanel(new TableBlackjack(this));
+	}
+	
+	public void mostrarPantallaDeCarga(JPanel destino) {
+		cambiarPanel(new DownloadScreen(this, destino, 50));
 	}
 	
 	

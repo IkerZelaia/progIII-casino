@@ -52,19 +52,19 @@ public class Card {
 	}
 	
 	 public enum Suit {
-		Spades("\u2660", false),
-		Hearts("\u2665", true),
-		Clubs("\u2663", false),
-		Diamonds("\u2666", true);
+		Spades("\u2660", Color.black),
+		Hearts("\u2665", Color.red),
+		Clubs("\u2663", Color.black),
+		Diamonds("\u2666", Color.red);
 		 
 		
 
 		private final String symbol;
-		private final boolean red;
+		private final Color color;
 		
-		private Suit(String symbol, boolean red) {
+		private Suit(String symbol, Color color) {
 			this.symbol = symbol;
-			this.red = red;
+			this.color = color;
 		}
 		
 		
@@ -72,27 +72,42 @@ public class Card {
 			return symbol;
 		}
 
-		public boolean isRed() {
-			return red;
+		public Color getColor() {
+			return color;
 		}
 
 	}
 	
 	 
-	private static ImageIcon backIcon;
+	private JLabel backImage;
 	private static boolean backLoaded = false;
 	 
 	private Suit suit;
 	private Rank rank;
-	private boolean visible;
-	private JPanel cardImage;
+	private boolean shown;
+	private JPanel back, front, image;
 	
 	
 	public Card(Rank rank, Suit suit){
 		this.suit = suit;
 		this.rank = rank;
-		this.visible = false;
+		this.shown = false;
+		this.back = new JPanel();
+		this.front = new JPanel(new BorderLayout());
 		
+		
+		front.setPreferredSize(cardSize());
+		front.setSize(cardSize());
+		
+		front.setBackground(Color.WHITE);
+		JLabel frontText = new JLabel(this.suit.getSymbol() + " " + this.rank.getSymbol());
+		frontText.setForeground(this.suit.getColor());
+		front.add(frontText, BorderLayout.NORTH);
+		
+		
+		ImageIcon img = new ImageIcon( new ImageIcon("res/back_standard.jpg").getImage().getScaledInstance(cardSize().width, cardSize().height, Image.SCALE_SMOOTH) );
+		backImage = new JLabel(img);
+		back.add(backImage);
 	}
 	
 	
@@ -102,25 +117,17 @@ public class Card {
 	public Suit getSuit() {
 		return this.suit;
 	}
-	public boolean isVisible() {
-		return this.visible;
+	public boolean isShown() {
+		return this.shown;
 	}
-	public void setVisible(boolean visible) {
-		this.visible = visible;
+	public void setShown(boolean visible) {
+		this.shown = visible;
 		refreshImage();
 	}
 	
 	public JPanel getImage() {
-		if (this.cardImage == null) {
-			this.cardImage = new JPanel();
-			Dimension size = cardSize();
-			cardImage.setPreferredSize(size);
-			cardImage.setMinimumSize(size);
-			cardImage.setMaximumSize(size);
-			refreshImage();
-		}
-		
-		return this.cardImage;
+		refreshImage();
+		return this.image;
 	}
 	
 	
@@ -129,25 +136,35 @@ public class Card {
 	}
 	
 	private void refreshImage() {
-		if (cardImage == null) {
+		image = shown ? front : back;
+	}
+	
+	@Override
+	public String toString() {
+		return rank + " of " + suit;
+	}
+	
+	/*
+	private void refreshImage() {
+		if (back == null) {
 			return;
 		}
-		cardImage.removeAll();
+		back.removeAll();
 		if (visible) {
 			buildFace();
 		} else {
 			buildBack();
 		}
-		cardImage.revalidate();
-		cardImage.repaint();
+		back.revalidate();
+		back.repaint();
 	}
 	
 	private void buildFace() {
 		Color color = suit.isRed() ? new Color(200, 0, 0): Color.BLACK;
 		
-		cardImage.setLayout(new GridLayout(2, 1));
-		cardImage.setBackground(Color.WHITE);
-		cardImage.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		back.setLayout(new GridLayout(2, 1));
+		back.setBackground(Color.WHITE);
+		back.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
 		
 		JLabel rankLabel = new JLabel(rank.getSymbol(), SwingConstants.CENTER);
 		rankLabel.setFont(new Font(Font.SERIF, Font.BOLD, 18));
@@ -157,20 +174,20 @@ public class Card {
 		suitLabel.setFont(new Font(Font.SERIF, Font.PLAIN, 24));
 		suitLabel.setForeground(color);
 		
-		cardImage.add(rankLabel);
-		cardImage.add(suitLabel);
+		back.add(rankLabel);
+		back.add(suitLabel);
 	}
 	
 	private void buildBack() {
-		cardImage.setLayout(new BorderLayout());
+		back.setLayout(new BorderLayout());
 		
 		ImageIcon icon = getBackIcon();
 		if (icon != null) {
-			cardImage.setBorder(null);
-			cardImage.add(new JLabel(icon), BorderLayout.CENTER);
+			back.setBorder(null);
+			back.add(new JLabel(icon), BorderLayout.CENTER);
 		} else {
-			cardImage.setBackground(new Color(25, 50, 130));
-			cardImage.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createLineBorder(Color.WHITE, 2)));
+			back.setBackground(new Color(25, 50, 130));
+			back.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.BLACK, 1), BorderFactory.createLineBorder(Color.WHITE, 2)));
 		}
 	}
 	
@@ -180,14 +197,11 @@ public class Card {
 			ImageIcon original = new ImageIcon("res/back_standard.jpg");
 			if(original.getIconWidth()> 0) {
 					Dimension size = cardSize();
-					backIcon = new ImageIcon(original.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH));
+					backImage = new ImageIcon(original.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH));
 			}
 		}
-		return backIcon;
+		return backImage;
 	}
 	
-	@Override
-	public String toString() {
-		return rank + " of " + suit;
-	}
+	*/
 }

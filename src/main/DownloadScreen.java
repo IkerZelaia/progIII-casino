@@ -14,8 +14,9 @@ import javax.swing.SwingUtilities;
 public class DownloadScreen extends JPanel { 
 
     private JProgressBar progressBar;
-
-    public DownloadScreen(Window window, JPanel panelDestino) {
+    private int duracion;
+    
+    public DownloadScreen(Window window, JPanel panelDestino, int duracion) {
         setLayout(new BorderLayout(0, 20));
         setBackground(Color.WHITE);
         setBorder(BorderFactory.createEmptyBorder(220, 150, 220, 150));
@@ -34,13 +35,15 @@ public class DownloadScreen extends JPanel {
 
         add(statusLabel, BorderLayout.NORTH);
         add(progressBar, BorderLayout.CENTER);
-
+        
+        this.duracion = duracion >= 0 ? duracion : 100;
+        
         iniciarHilo(window, panelDestino);
     }
 
     private void iniciarHilo(Window window, JPanel panelDestino) {
         Thread downloadThread = new Thread(() -> {
-            for (int i = 0; i <= 100; i++) {
+            for (int i = 0; i <= 100; i += 100/duracion) {
                 final int currentProgress = i;
 
                 SwingUtilities.invokeLater(() -> {
@@ -48,7 +51,7 @@ public class DownloadScreen extends JPanel {
                 });
 
                 try {
-                    Thread.sleep(30); 
+                    Thread.sleep(Main.REFRESH_RATE); 
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -61,5 +64,6 @@ public class DownloadScreen extends JPanel {
         });
 
         downloadThread.start(); 
+        
     }
 }

@@ -49,7 +49,7 @@ public class Deck {
 			throw new IllegalStateException("El mazo esta vacio");
 		}
 		Card card = unusedCards.removeFirst();
-		unusedCards.add(card);
+		usedCards.add(card);
 		return card;
 	}
 	
