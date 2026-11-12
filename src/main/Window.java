@@ -43,7 +43,7 @@ public class Window extends JFrame{
 	
 	
 	public void mostrarPoker() {
-		cambiarPanel(new DownloadScreen(this, new TablePoker(8, this), 70));
+		cambiarPanel(new DownloadScreen(this, new TablePoker(8, this), 80));
 	}
 	
 
