@@ -1,5 +1,6 @@
 package main;
 
+import java.util.Random;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
@@ -42,15 +43,15 @@ public class Window extends JFrame{
 	
 	
 	public void mostrarPoker() {
-		cambiarPanel(new TablePoker(8, this));
+		cambiarPanel(new DownloadScreen(this, new TablePoker(8, this), 70));
 	}
 	
 
 	public void mostrarSlots() {
-		cambiarPanel(new SlotMachine());
+		cambiarPanel(new DownloadScreen(this, new SlotMachine(), 30));
 	}
 	public void mostrarBlackjack() {
-		cambiarPanel(new TableBlackjack(this));
+		cambiarPanel(new DownloadScreen(this, new TableBlackjack(this), 10));
 	}
 	
 	public void mostrarPantallaDeCarga(JPanel destino) {
