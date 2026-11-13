@@ -1,6 +1,7 @@
 package table;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -12,14 +13,31 @@ import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import main.Window; // Asegúrate de importar tu clase Window
 
 public class TableBlackjack extends JPanel {
 
-	private Window window; // Cambiado a Window en lugar de JFrame genérico
+	private static final Color COLOR_TAPETE = new Color(25, 105, 52);
+	private static final Color COLOR_BARRA = new Color(15, 65, 32);
+	private static final Color COLOR_DORADO = new Color(212, 175, 55);
+	private static final Color COLOR_BURDEOS = new Color(110, 15, 30);
+	private static final Color COLOR_BURDEOS_HOVER = new Color(145, 25, 45);
+	private static final Color COLOR_ACCION = new Color(0, 100, 0);
+	private static final Color COLOR_ACCION_HOVER = new Color(0, 135, 0);
+	
+	
+	
+	
+	private Window window; 
 	private static final long serialVersionUID = 1L;
 	private JLabel lblTitulo;
 	private JButton btnVolverMenu;
@@ -35,6 +53,13 @@ public class TableBlackjack extends JPanel {
 	private JButton btnFicha100;
 	private JButton btnPedir;
 	private JButton btnPlantarse;
+	
+	
+	//
+	private int saldo = 1000;
+	private int apuestaActual = 0;
+
+	private JButton btnRepartir;
 
 	public TableBlackjack(Window window) {
 		this.window = window;
@@ -42,46 +67,71 @@ public class TableBlackjack extends JPanel {
 		setLayout(new BorderLayout());
 
 		JPanel panelSuperior = new JPanel(new BorderLayout());
-		panelSuperior.setBackground(new Color(20, 80, 40)); 
+		panelSuperior.setBackground(COLOR_BARRA); 
+		panelSuperior.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder(0, 0, 2, 0, COLOR_DORADO),
+				BorderFactory.createEmptyBorder(10, 15, 10, 15)
+		));
 
-		lblTitulo = new JLabel("BLACKJACK", SwingConstants.CENTER);
-		lblTitulo.setFont(new Font("Arial", Font.BOLD, 40));
-		lblTitulo.setForeground(Color.RED.darker());
+		lblTitulo = new JLabel("♠  BLACKJACK  ♦", SwingConstants.CENTER);
+		lblTitulo.setFont(new Font(Font.SERIF, Font.BOLD, 34));
+		lblTitulo.setForeground(COLOR_DORADO);
+		
 
 		btnVolverMenu = new JButton("Volver al Menu");
+		estilizarBoton(btnVolverMenu, COLOR_BURDEOS, COLOR_BURDEOS_HOVER);
 		btnVolverMenu.addActionListener(e -> this.window.mostrarMenu());
 		
 		panelSuperior.add(btnVolverMenu, BorderLayout.WEST);
 		panelSuperior.add(lblTitulo, BorderLayout.CENTER);
+		panelSuperior.add(Box.createHorizontalStrut(btnVolverMenu.getPreferredSize().width), BorderLayout.EAST);
 
-		JPanel panelCentro = new JPanel(new GridLayout(2, 1));
-		panelCentro.setBackground(new Color(35, 120, 60)); 
+		JPanel panelCentro = new JPanel(new BorderLayout(0, 10));
+		panelCentro.setBackground(COLOR_TAPETE);
+		panelCentro.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
 
-		panelRepartidor = new JPanel();
-		panelRepartidor.setOpaque(false); 
-		panelRepartidor.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.WHITE), "Cartas del Repartidor", 0, 0, null, Color.WHITE));
+		JPanel zonaCartas = new JPanel(new GridLayout(2, 1, 0, 15));
+		zonaCartas.setOpaque(false);
 
-		panelJugador = new JPanel();
-		panelJugador.setOpaque(false);
-		panelJugador.setBorder(BorderFactory.createTitledBorder(
-				BorderFactory.createLineBorder(Color.WHITE), "Tus Cartas", 0, 0, null, Color.WHITE));
+		panelRepartidor = crearZonaCartas("CARTAS DEL REPARTIDOR");
+		panelJugador = crearZonaCartas("TUS CARTAS");
 
-		panelCentro.add(panelRepartidor);
-		panelCentro.add(panelJugador);
+		zonaCartas.add(panelRepartidor);
+		zonaCartas.add(panelJugador);
+		
+		
 
+		panelCentro.add(zonaCartas, BorderLayout.CENTER);
+
+		
+		
 		JPanel panelInferior = new JPanel(new GridLayout(2, 1));
-		panelInferior.setBackground(new Color(20, 80, 40));
+		panelInferior.setBackground(COLOR_BARRA);
+		panelInferior.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder(2, 0, 0, 0, COLOR_DORADO),
+				BorderFactory.createEmptyBorder(8, 15, 10, 15)
+		));
+		
 
-		JPanel panelInfoApuesta = new JPanel();
+		JPanel panelInfoApuesta = new JPanel(new FlowLayout(FlowLayout.CENTER, 35, 4));
 		panelInfoApuesta.setOpaque(false);
-		lblFichas = new JLabel("Fichas: 0€   | ");
+		
+		Font fuenteMarcador = new Font(Font.SERIF, Font.BOLD, 20);
+		
+		lblFichas = new JLabel();
+		lblFichas.setFont(fuenteMarcador);
 		lblFichas.setForeground(Color.WHITE);
-		lblApuesta = new JLabel("Apuesta actual: 0€");
+		lblApuesta = new JLabel();
 		lblApuesta.setForeground(Color.WHITE);
+		lblApuesta.setFont(fuenteMarcador);
+
 		panelInfoApuesta.add(lblFichas);
 		panelInfoApuesta.add(lblApuesta);
 
+		
+		
+		
+		
 		JPanel panelBotones = new JPanel();
 		panelBotones.setOpaque(false);
 		panelBotones.setLayout(new FlowLayout(FlowLayout.CENTER, 15, 10));
@@ -92,9 +142,12 @@ public class TableBlackjack extends JPanel {
 		btnFicha20.setContentAreaFilled(false);
 		btnFicha20.setFocusPainted(false);
 		
+		Font fuenteValorFicha = new Font(Font.SERIF, Font.BOLD, 16);
+		
+		
 		JLabel lblValor20 = new JLabel("20€");
-		lblValor20.setForeground(Color.GREEN.darker());
-		lblValor20.setFont(new Font("Arial", Font.BOLD, 14));
+		lblValor20.setForeground(Color.white);
+		lblValor20.setFont(fuenteValorFicha);
 
 		ImageIcon iconoFicha50 = cargarIconoEscalado("res/PokerChip_50.png", 100, 70);
 		btnFicha50 = new JButton(iconoFicha50);
@@ -103,8 +156,8 @@ public class TableBlackjack extends JPanel {
 		btnFicha50.setFocusPainted(false);
 		
 		JLabel lblValor50 = new JLabel("50€");
-		lblValor50.setForeground(Color.RED);
-		lblValor50.setFont(new Font("Arial", Font.BOLD, 14));
+		lblValor50.setForeground(Color.WHITE);
+		lblValor50.setFont(fuenteValorFicha);
 
 		ImageIcon iconoFicha100 = cargarIconoEscalado("res/PokerChip_100.png", 100, 70);
 		btnFicha100 = new JButton(iconoFicha100);
@@ -113,11 +166,12 @@ public class TableBlackjack extends JPanel {
 		btnFicha100.setFocusPainted(false);
 		
 		JLabel lblValor100 = new JLabel("100€");
-		lblValor100.setForeground(Color.BLACK.brighter());
-		lblValor100.setFont(new Font("Arial", Font.BOLD, 14));
+		lblValor100.setForeground(Color.white);
+		lblValor100.setFont(fuenteValorFicha);
 
 		btnPedir = new JButton("Pedir Carta");
 		btnPlantarse = new JButton("Plantarse");
+		
 
 		panelBotones.add(btnFicha20);
 		panelBotones.add(lblValor20);
@@ -140,7 +194,66 @@ public class TableBlackjack extends JPanel {
 		add(panelSuperior, BorderLayout.NORTH);
 		add(panelCentro, BorderLayout.CENTER);
 		add(panelInferior, BorderLayout.SOUTH);
+		
+		
+		btnRepartir = new JButton("Repartir");
+
+		panelBotones.add(Box.createHorizontalStrut(30));
+		panelBotones.add(btnRepartir);
+		
+		//estilo botones
+		
+		estilizarBoton(btnRepartir, COLOR_ACCION, COLOR_ACCION_HOVER);
+		estilizarBoton(btnPedir, COLOR_ACCION, COLOR_ACCION_HOVER);
+		estilizarBoton(btnPlantarse, COLOR_BURDEOS, COLOR_BURDEOS_HOVER);
+				
+
+		// llaman a metodo apostar al hacer clic
+		btnFicha20.addActionListener(e -> apostar(20));
+		btnFicha50.addActionListener(e -> apostar(50));
+		btnFicha100.addActionListener(e -> apostar(100));
+
+		// Evento de Repartir (cambia de fase)
+		//btnRepartir.addActionListener(e -> iniciarRonda());
+
+		// Dejamos la mesa preparada en "Fase de Apuesta"
+		actualizarTextosDinero();
+		configurarFaseApuesta(true);
+		
+		
 	}
+	
+	// mejorar estetica de botones
+	private void estilizarBoton(JButton boton, Color colorFondo, Color colorHover) {
+		boton.setFont(new Font(Font.SERIF, Font.BOLD, 17));
+		boton.setForeground(Color.WHITE);
+		boton.setBackground(colorFondo);
+		boton.setFocusPainted(false);
+		boton.setOpaque(true);
+		boton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+		boton.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(COLOR_DORADO, 2),
+				BorderFactory.createEmptyBorder(8, 18, 8, 18)
+		));
+
+		boton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				if (boton.isEnabled()) {
+					boton.setBackground(colorHover);
+				}
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if (boton.isEnabled()) {
+					boton.setBackground(colorFondo);
+				}
+			}
+		});
+	}
+	
 	
 	//auxiliar para el tamaño de las imagenes (IA)
 	private ImageIcon cargarIconoEscalado(String ruta, int ancho, int alto) {
@@ -152,7 +265,54 @@ public class TableBlackjack extends JPanel {
 	    }
 	    return iconoOriginal;
 	}
+	// cambiar estetica de la zona de cartas
+	private JPanel crearZonaCartas(String titulo) {
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
+		panel.setOpaque(false);
+
+		TitledBorder borde = BorderFactory.createTitledBorder(
+				BorderFactory.createLineBorder(new Color(255, 255, 255, 140), 1),
+				"  " + titulo + "  "
+		);
+		borde.setTitleFont(new Font(Font.SERIF, Font.BOLD, 16));
+		borde.setTitleColor(COLOR_DORADO);
+		panel.setBorder(borde);
+
+		return panel;
+	}
 	
+	
+	
+	// sumar dinero a la apuesta si tiene saldo
+	private void apostar(int cantidad) {
+	    if (saldo >= cantidad) {
+	        saldo -= cantidad;
+	        apuestaActual += cantidad;
+	        actualizarTextosDinero();
+	    } else {
+	        JOptionPane.showMessageDialog(this, "No tienes suficiente saldo para esa ficha.", "Saldo insuficiente", JOptionPane.WARNING_MESSAGE);
+	    }
+	}
+
+	// actualiza etiqueetas de saldo
+	private void actualizarTextosDinero() {
+	    lblFichas.setText("Fichas: " + saldo + "€");
+	    lblApuesta.setText("Apuesta actual: " + apuestaActual + "€");
+	}
+
+	// controla que botones son utilizables
+	private void configurarFaseApuesta(boolean esFaseApuesta) {
+	    // si estamos apostando se activan fichas y repartir
+	    btnFicha20.setEnabled(esFaseApuesta);
+	    btnFicha50.setEnabled(esFaseApuesta);
+	    btnFicha100.setEnabled(esFaseApuesta);
+	    btnRepartir.setEnabled(esFaseApuesta);
+
+	    // si no estamos apostando activa pedir y plantarse
+	    btnPedir.setEnabled(!esFaseApuesta);
+	    btnPlantarse.setEnabled(!esFaseApuesta);
+	}
+
 	
 	
 	public Window getWindow() {
