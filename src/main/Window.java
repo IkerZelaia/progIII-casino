@@ -11,6 +11,7 @@ import menu.MainMenu;
 import table.SlotMachine;
 import table.TablePoker;
 import table.TableBlackjack;
+import table.TableHorseRace;
 
 public class Window extends JFrame{
 	public Window() {
@@ -29,13 +30,15 @@ public class Window extends JFrame{
 	public void mostrarMenu() {
 		MainMenu menu = new MainMenu();
 		
-		mostrarPantallaDeCarga(menu);
+		cargar(menu, 50);
 		
 		menu.anadirJuego("Poker", this::mostrarPoker);
 
         menu.anadirJuego("Slots", this::mostrarSlots); 
         
 		menu.anadirJuego("Blackjack", this::mostrarBlackjack);
+		
+		menu.anadirJuego("Caballos", this::mostrarCaballos);
 		//cambiarPanel(menu);
 
 	}
@@ -43,19 +46,21 @@ public class Window extends JFrame{
 	
 	
 	public void mostrarPoker() {
-		cambiarPanel(new DownloadScreen(this, new TablePoker(8, this), 80));
+		cargar(new TablePoker(8, this), 80);
 	}
-	
-
 	public void mostrarSlots() {
-		cambiarPanel(new DownloadScreen(this, new SlotMachine(), 30));
+		cargar(new SlotMachine(), 30);
 	}
 	public void mostrarBlackjack() {
-		cambiarPanel(new DownloadScreen(this, new TableBlackjack(this), 10));
+		cargar(new TableBlackjack(this), 10);
 	}
 	
-	public void mostrarPantallaDeCarga(JPanel destino) {
-		cambiarPanel(new DownloadScreen(this, destino, 50));
+	public void mostrarCaballos() {
+		cargar(new TableHorseRace(this), 30);
+	}
+	
+	public void cargar(JPanel destino, int tiempo) {
+		cambiarPanel(new DownloadScreen(this, destino, tiempo));
 	}
 	
 	
