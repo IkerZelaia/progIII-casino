@@ -36,26 +36,33 @@ public class DownloadScreen extends JPanel {
         add(statusLabel, BorderLayout.NORTH);
         add(progressBar, BorderLayout.CENTER);
         
-        this.duracion = duracion >= 0 ? duracion : 100;
-        
+        this.duracion = duracion > 0 ? duracion : 100;
+        if (!Main.isLoadtime()) {
+        	this.duracion = -1;
+        }
+        	
         iniciarHilo(window, panelDestino);
     }
 
     private void iniciarHilo(Window window, JPanel panelDestino) {
         Thread downloadThread = new Thread(() -> {
-            for (int i = 0; i <= 100; i += 100/duracion) {
-                final int currentProgress = i;
+        	
+        	if(duracion > 0) {
+        		for (int i = 0; i <= 100; i += 100/duracion) {
+                    final int currentProgress = i;
 
-                SwingUtilities.invokeLater(() -> {
-                    progressBar.setValue(currentProgress);
-                });
+                    SwingUtilities.invokeLater(() -> {
+                        progressBar.setValue(currentProgress);
+                    });
 
-                try {
-                    Thread.sleep(Main.REFRESH_RATE); 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    try {
+                        Thread.sleep(Main.REFRESH_RATE); 
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
+        	}
+            
 
  
             SwingUtilities.invokeLater(() -> {
