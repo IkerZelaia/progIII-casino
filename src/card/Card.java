@@ -52,10 +52,10 @@ public class Card {
 	}
 	
 	 public enum Suit {
-		Spades("\u2660", Color.black),
-		Hearts("\u2665", Color.red),
-		Clubs("\u2663", Color.black),
-		Diamonds("\u2666", Color.red);
+		Spades("\u2660", new Color(25, 25, 28)),
+		Hearts("\u2665", new Color(185, 25, 35)),
+		Clubs("\u2663", new Color(25, 25, 28)),
+		Diamonds("\u2666", new Color(185, 25, 35));
 		 
 		
 
@@ -103,6 +103,25 @@ public class Card {
 		JLabel frontText = new JLabel(this.suit.getSymbol() + " " + this.rank.getSymbol());
 		frontText.setForeground(this.suit.getColor());
 		front.add(frontText, BorderLayout.NORTH);
+		
+		// mejora de diseño
+		
+		frontText.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+		front.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+				BorderFactory.createEmptyBorder(4, 6, 4, 6)
+		));
+
+		JLabel centerSymbol = new JLabel(this.suit.getSymbol(), SwingConstants.CENTER);
+		centerSymbol.setFont(new Font(Font.SERIF, Font.PLAIN, 44));
+		centerSymbol.setForeground(this.suit.getColor());
+		front.add(centerSymbol, BorderLayout.CENTER);
+
+		JLabel bottomText = new JLabel(this.rank.getSymbol() + " " + this.suit.getSymbol(), SwingConstants.RIGHT);
+		bottomText.setFont(new Font(Font.SERIF, Font.BOLD, 16));
+		bottomText.setForeground(this.suit.getColor());
+		front.add(bottomText, BorderLayout.SOUTH);
+		
 		
 		
 		ImageIcon img = new ImageIcon( new ImageIcon("res/back_standard.jpg").getImage().getScaledInstance(cardSize().width, cardSize().height, Image.SCALE_SMOOTH) );
