@@ -40,6 +40,7 @@ public class Window extends JFrame{
 		
 		menu.anadirJuego("Caballos", this::mostrarCaballos);
 		//cambiarPanel(menu);
+		
 
 	}
 	
@@ -49,7 +50,7 @@ public class Window extends JFrame{
 		cargar(new TablePoker(8, this), 80);
 	}
 	public void mostrarSlots() {
-		cargar(new SlotMachine(), 30);
+		cargar(new SlotMachine(this), 30);
 	}
 	public void mostrarBlackjack() {
 		cargar(new TableBlackjack(this), 10);
