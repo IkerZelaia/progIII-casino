@@ -1,5 +1,6 @@
 package table;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -13,14 +14,15 @@ public class Dealer extends Thread {
 	private final Deck deck;
 	private final List<Player> players;
 	private final int cardsPerPlayer;
-	private final Runnable finished;
+	private final int delayMs;
 	
-	public Dealer (Deck deck, List<Player> players, int cardsPerPlayer, Runnable finished) {
+	public Dealer (Deck deck, List<Player> players, int cardsPerPlayer, int delayMs) {
 		super("Dealer");
 		this.deck = deck;
 		this.players = players;
 		this.cardsPerPlayer = cardsPerPlayer;
-		this.finished = finished;
+		this.delayMs = delayMs;
+		setDaemon(true);
 		
 	}
 	
@@ -32,16 +34,15 @@ public class Dealer extends Thread {
 			for (int round = 0; round < cardsPerPlayer; round++) {
 				for (Player player : players) {
 					Card card = deck.draw();
-					SwingUtilities.invokeLater(() -> player.receiveCard(card));
-					Thread.sleep(400);
+					player.receiveCard(card);
+					SwingUtilities.invokeLater(() -> player.showCard(card));
+					Thread.sleep(delayMs);
 					
 				}
 			}
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
-		} finally {
-			SwingUtilities.invokeLater(finished);
-		}
+		} 
 	}
 	
 }
