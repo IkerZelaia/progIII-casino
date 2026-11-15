@@ -32,7 +32,7 @@ public class SlotMachine extends JPanel {
     private static final Color COLOR_ACCION = new Color(0, 100, 0);
     private static final Color COLOR_ACCION_HOVER = new Color(0, 135, 0);
 
-    // Volvemos a usar JLabel normal
+    
     private JLabel slot1, slot2, slot3;
     private JButton spinButton;
     private Random random;
@@ -45,14 +45,12 @@ public class SlotMachine extends JPanel {
         
         setLayout(new BorderLayout(20, 50));
         
-        // Aplicamos el color de fondo del tapete del Blackjack
+       
         setBackground(COLOR_TAPETE);
         setBorder(BorderFactory.createEmptyBorder(50, 100, 100, 100));
         random = new Random();
         
-        // ==========================================
-        // 1. CARGAR IMÁGENES
-        // ==========================================
+        
         String[] rutasImagenes = {
             "res/figura1.jpg", 
             "res/figura2.jpg", 
@@ -62,13 +60,9 @@ public class SlotMachine extends JPanel {
         
         arrayImagenes = new ImageIcon[rutasImagenes.length];
         for (int i = 0; i < rutasImagenes.length; i++) {
-            // Tamaño 120x120 para que se vean bien grandes
             arrayImagenes[i] = cargarYRedimensionarImagen(rutasImagenes[i], 120, 120);
         }
 
-        // ==========================================
-        // 2. PANEL SUPERIOR: BOTÓN Y TÍTULO
-        // ==========================================
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.setOpaque(false); 
 
@@ -83,13 +77,9 @@ public class SlotMachine extends JPanel {
         topPanel.add(backButton, BorderLayout.WEST);
         topPanel.add(titleLabel, BorderLayout.CENTER);
         
-        // ==========================================
-        // 3. PANEL CENTRAL: CASILLAS CON IMÁGENES
-        // ==========================================
         JPanel numbersPanel = new JPanel(new GridLayout(1, 3, 30, 0));
         numbersPanel.setOpaque(false);
 
-        // Inicializamos las casillas con su nuevo borde dorado
         slot1 = crearCasillaImagen(arrayImagenes[0]);
         slot2 = crearCasillaImagen(arrayImagenes[0]);
         slot3 = crearCasillaImagen(arrayImagenes[0]);
@@ -98,9 +88,6 @@ public class SlotMachine extends JPanel {
         numbersPanel.add(slot2);
         numbersPanel.add(slot3);
 
-        // ==========================================
-        // 4. BOTÓN INFERIOR: SPIN
-        // ==========================================
         spinButton = new JButton("SPIN");
         spinButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 36));
         estilizarBoton(spinButton, COLOR_ACCION, COLOR_ACCION_HOVER);
@@ -111,16 +98,11 @@ public class SlotMachine extends JPanel {
         add(spinButton, BorderLayout.SOUTH);
     }
 
-    // ==========================================
-    // MÉTODOS AUXILIARES
-    // ==========================================
     
     private JLabel crearCasillaImagen(ImageIcon iconoInicial) {
         JLabel label = new JLabel(iconoInicial, SwingConstants.CENTER);
-        // Aquí está la magia: Borde de línea sólido, color dorado, grosor de 8 píxeles
         label.setBorder(BorderFactory.createLineBorder(COLOR_DORADO, 8));
         
-        // Opcional: ponerle un fondo blanco a la casilla para que resalte la figura
         label.setOpaque(true);
         label.setBackground(Color.WHITE);
         
@@ -156,7 +138,7 @@ public class SlotMachine extends JPanel {
             }
         });
     }
-
+// copiado de blackjack
     private ImageIcon cargarYRedimensionarImagen(String ruta, int width, int height) {
         java.io.File archivoImagen = new java.io.File(ruta);
         
@@ -187,7 +169,6 @@ public class SlotMachine extends JPanel {
                 ImageIcon finalImg3 = img3;
 
                 SwingUtilities.invokeLater(() -> {
-                    // Volvemos a usar setIcon ya que volvemos a usar JLabel
                     slot1.setIcon(finalImg1);
                     slot2.setIcon(finalImg2);
                     slot3.setIcon(finalImg3);
