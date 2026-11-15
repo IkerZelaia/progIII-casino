@@ -1,8 +1,10 @@
 package main;
 
 import java.awt.BorderLayout;
+import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -17,9 +19,10 @@ public class DownloadScreen extends JPanel {
     private int duracion;
     
     public DownloadScreen(Window window, JPanel panelDestino, int duracion) {
-        setLayout(new BorderLayout(0, 20));
-        setBackground(Color.WHITE);
-        setBorder(BorderFactory.createEmptyBorder(220, 150, 220, 150));
+        setLayout(new BorderLayout());
+        JLabel fondo = new JLabel(new ImageIcon("res/ruleta.jpg"));
+        fondo.setLayout(new BorderLayout(0, 20));
+        fondo.setBorder(BorderFactory.createEmptyBorder(220, 150, 220, 150));
 
         Color verdeCasino = new Color(0, 150, 0);
 
@@ -33,8 +36,9 @@ public class DownloadScreen extends JPanel {
         progressBar.setBackground(Color.WHITE); 
         progressBar.setBorder(BorderFactory.createLineBorder(verdeCasino, 2)); 
 
-        add(statusLabel, BorderLayout.NORTH);
-        add(progressBar, BorderLayout.CENTER);
+        fondo.add(statusLabel, BorderLayout.NORTH);
+        fondo.add(progressBar, BorderLayout.CENTER);
+        add(fondo, BorderLayout.CENTER);
         
         this.duracion = duracion > 0 ? duracion : 100;
         if (!Main.isLoadtime()) {
