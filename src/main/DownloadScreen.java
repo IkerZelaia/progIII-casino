@@ -37,7 +37,7 @@ public class DownloadScreen extends JPanel {
         add(progressBar, BorderLayout.CENTER);
         
         this.duracion = duracion > 0 ? duracion : 100;
-        if (!Main.isLoadtime()) {
+        if (!Main.debugLoadtime()) {
         	this.duracion = -1;
         }
         	
