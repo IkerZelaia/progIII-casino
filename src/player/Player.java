@@ -55,5 +55,10 @@ public class Player {
 	public List<Card> getHand() {
 		return hand;
 	}
+
+	public void showCard(Card card) {
+		// TODO Auto-generated method stub
+		card.setShown(true);
+	}
 	
 }

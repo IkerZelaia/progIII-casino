@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import java.awt.Cursor;
@@ -46,6 +47,7 @@ public class TableBlackjack extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JLabel lblTitulo;
 	private JButton btnVolverMenu;
+	private JButton btnHistorial;
 	
 	private JPanel panelRepartidor;
 	private JPanel panelJugador;
@@ -94,6 +96,14 @@ public class TableBlackjack extends JPanel {
 		panelSuperior.add(btnVolverMenu, BorderLayout.WEST);
 		panelSuperior.add(lblTitulo, BorderLayout.CENTER);
 		panelSuperior.add(Box.createHorizontalStrut(btnVolverMenu.getPreferredSize().width), BorderLayout.EAST);
+		
+		btnHistorial = new JButton("Historial");
+        estilizarBoton(btnHistorial, COLOR_ACCION, COLOR_ACCION_HOVER);
+        btnHistorial.addActionListener(e -> new HistorialBlackjack().setVisible(true));
+
+        panelSuperior.add(btnVolverMenu, BorderLayout.WEST);
+        panelSuperior.add(lblTitulo, BorderLayout.CENTER);
+        panelSuperior.add(btnHistorial, BorderLayout.EAST);
 
 		JPanel panelCentro = new JPanel(new BorderLayout(0, 10));
 		panelCentro.setBackground(COLOR_TAPETE);
@@ -226,6 +236,8 @@ public class TableBlackjack extends JPanel {
 		btnRepartir.addActionListener(e -> iniciarRonda());
 		btnPedir.addActionListener(e -> pedirCarta());
 		btnPlantarse.addActionListener(e -> plantarse());
+		
+		
 
 		// Dejamos la mesa preparada en "Fase de Apuesta"
 		actualizarTextosDinero();
@@ -429,56 +441,60 @@ public class TableBlackjack extends JPanel {
 	}
 	
 	private void pedirCarta() {
-		repartirCarta(manoJugador, true);
-		actualizarMesa();
+        repartirCarta(manoJugador, true);
+        actualizarMesa();
 
-		int puntos = calcularPuntos(manoJugador);
-		if (puntos > 21) {
-			finalizarRonda("Te has pasado", "Has sumado " + puntos + " puntos. Gana la banca.", 0);
-		}
-	}
-	
-	private void finalizarRonda(String titulo, String mensaje, int premio) {
-		saldo += premio;
-		apuestaActual = 0;
-		actualizarTextosDinero();
-		
-		manoJugador.clear();
-		manoRepartidor.clear();
-		actualizarMesa();
+        int puntos = calcularPuntos(manoJugador);
+        if (puntos > 21) {
+            int ptsRepartidor = calcularPuntos(manoRepartidor);
+            HistorialBlackjack.guardarPartida(apuestaActual, puntos, ptsRepartidor, "DERROTA", -apuestaActual);
+            finalizarRonda("Te has pasado", "Has sumado " + puntos + " puntos. Gana la banca.", 0);
+        }
+    }
 
-		configurarFaseApuesta(true);
-	}
-	
-	private void plantarse() {
+    private void finalizarRonda(String titulo, String mensaje, int premio) {
+        JOptionPane.showMessageDialog(this, mensaje, titulo, JOptionPane.INFORMATION_MESSAGE);
+        saldo += premio;
+        apuestaActual = 0;
+        actualizarTextosDinero();
 
-		// destapar cartas de repartidor
-		for (Card c : manoRepartidor) {
-			c.setShown(true);
-		}
-		actualizarMesa();
+        manoJugador.clear();
+        manoRepartidor.clear();
+        actualizarMesa();
+        configurarFaseApuesta(true);
+    }
 
-		// la banca sigue repartiendo hasta 17 o mas
-		while (calcularPuntos(manoRepartidor) < 17) {
-			repartirCarta(manoRepartidor, true);
-			actualizarMesa();
-		}
+    private void plantarse() {
+        // cartas repartdor
+        for (Card c : manoRepartidor) {
+            c.setShown(true);
+        }
+        actualizarMesa();
 
-		// comparar puntuaciones
-		int ptsJugador = calcularPuntos(manoJugador);
-		int ptsRepartidor = calcularPuntos(manoRepartidor);
+        // sigue repartiendo hasta 17 o más
+        while (calcularPuntos(manoRepartidor) < 17) {
+            repartirCarta(manoRepartidor, true);
+            actualizarMesa();
+        }
 
-		if (ptsRepartidor > 21) {
-			finalizarRonda("¡Ganaste!", "La banca se pasó con " + ptsRepartidor + " puntos. Ganas " + (apuestaActual * 2) + "€.", apuestaActual * 2);
-		} else if (ptsJugador > ptsRepartidor) {
-			finalizarRonda("¡Ganaste!", "Tus " + ptsJugador + " puntos superan los " + ptsRepartidor + " de la banca. Ganas " + (apuestaActual * 2) + "€.", apuestaActual * 2);
-		} else if (ptsJugador == ptsRepartidor) {
-			finalizarRonda("Empate", "Ambos tenéis " + ptsJugador + " puntos. Recuperas tu apuesta de " + apuestaActual + "€.", apuestaActual);
-		} else {
-			finalizarRonda("Gana la banca", "La banca gana con " + ptsRepartidor + " puntos frente a tus " + ptsJugador + ".", 0);
-		}
-	}
+        // compara puntuaciones
+        int ptsJugador = calcularPuntos(manoJugador);
+        int ptsRepartidor = calcularPuntos(manoRepartidor);
 
+        if (ptsRepartidor > 21) {
+            HistorialBlackjack.guardarPartida(apuestaActual, ptsJugador, ptsRepartidor, "VICTORIA", apuestaActual);
+            finalizarRonda("¡Ganaste!", "La banca se pasó con " + ptsRepartidor + " puntos. Ganas " + (apuestaActual * 2) + "€.", apuestaActual * 2);
+        } else if (ptsJugador > ptsRepartidor) {
+            HistorialBlackjack.guardarPartida(apuestaActual, ptsJugador, ptsRepartidor, "VICTORIA", apuestaActual);
+            finalizarRonda("¡Ganaste!", "Tus " + ptsJugador + " puntos superan los " + ptsRepartidor + " de la banca. Ganas " + (apuestaActual * 2) + "€.", apuestaActual * 2);
+        } else if (ptsJugador == ptsRepartidor) {
+            HistorialBlackjack.guardarPartida(apuestaActual, ptsJugador, ptsRepartidor, "EMPATE", 0);
+            finalizarRonda("Empate", "Ambos tenéis " + ptsJugador + " puntos. Recuperas tu apuesta de " + apuestaActual + "€.", apuestaActual);
+        } else {
+            HistorialBlackjack.guardarPartida(apuestaActual, ptsJugador, ptsRepartidor, "DERROTA", -apuestaActual);
+            finalizarRonda("Gana la banca", "La banca gana con " + ptsRepartidor + " puntos frente a tus " + ptsJugador + ".", 0);
+        }
+    }
 	
 	
 	public Window getWindow() {

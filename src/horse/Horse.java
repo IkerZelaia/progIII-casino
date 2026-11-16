@@ -25,8 +25,8 @@ public class Horse implements Comparable<Horse>{
 	
 	private static final Color[] BASE_COLORS = {CHESTNUT, WHITE, DARK, GRAY, GINGER, CREAM};
 	private static final Color[] MANE_COLORS = {WHITE, DARK, CHESTNUT, GRAY};
-	private static final String[] NAMES1 = {"", "Sea", "Sunday", "American", "War", "Deep", "Gold", "Vaguely", "Forever", "Admire", "Chestnut", "Native", "Black", "Red"};
-	private static final String[] NAMES2 = {"Biscuit", "Silence", "Pharaoh", "Admiral", "Secretariat", "Eclipse", "Assault", "Impact", "Arabian", "Turk", "Sultan", "Young", "Opera", "Tempo", "Soverignty", "City", "Dancer"};
+	private static final String[] NAMES1 = {"", "Sea", "Sunday", "American", "War", "Deep", "Gold", "Vaguely", "Forever", "Admire", "Chestnut", "Native", "Black", "Red", "Flying", "Loud", "Jolly","Silly","River", "Speed", "Card" };
+	private static final String[] NAMES2 = {"Biscuit", "Silence", "Pharaoh", "Admiral", "Secretariat", "Eclipse", "Assault", "Impact", "Arabian", "Turk", "Sultan", "Young", "Opera", "Tempo", "Soverignty", "City", "Dancer", "Ship", "Diamond", "Cross", "Ace", "King"};
 	
 	private Random horseSeed;
 	
